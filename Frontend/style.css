@@ -29,15 +29,28 @@ body {
   display: none;
 }
 
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-wrapper:has(#auth-section.hidden) {
+  display: none;
+}
+
 .error {
   color: var(--error);
   font-size: 0.9rem;
 }
 
-/* Auth section */
+/* ── Auth section ───────────────────────────────────────────── */
+
 #auth-section {
   max-width: 480px;
-  margin: 40px auto;
+  width: 100%;
+  margin: 0 auto;
   padding: 24px 20px 20px;
   background: linear-gradient(145deg, var(--navy-soft), var(--navy));
   border-radius: 12px;
@@ -50,34 +63,115 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+  color: var(--gold-light);
+  letter-spacing: 0.04em;
 }
 
-/* Auth logo */
 #auth-section h1 .logo {
-  height: 80px; /* was 32px */
+  height: 36px;
   width: auto;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
 }
-/* Topbar logo */
-.topbar-logo {
-  height: 80px;     /* tweak to taste */
-  width: auto;
+
+#auth-section h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
+
+#auth-section label {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+#auth-section input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 3px;
+  border-radius: 6px;
+  border: 1px solid rgba(201, 154, 59, 0.4);
+  background-color: rgba(5, 9, 18, 0.9);
+  color: var(--text);
+  outline: none;
+  font-size: 0.9rem;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+#auth-section input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(201, 154, 59, 0.6);
+  background-color: #0c1220;
+}
+
+#auth-section button {
+  margin-top: 14px;
+  width: 100%;
+  padding: 9px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--gold), #e0b553);
+  color: #1b1305;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+}
+
+#auth-section button:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+}
+
+#auth-section button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+}
+
 #auth-section hr {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin: 18px 0;
 }
 
-/* App layout */
+/* ── App layout ─────────────────────────────────────────────── */
+
+#app-section {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 
 .topbar {
-  padding: 10px 18px;
+  height: 50px;
+  padding: 0 18px;
   background: linear-gradient(90deg, var(--navy-dark), var(--navy-soft));
   border-bottom: 1px solid rgba(201, 154, 59, 0.35);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+}
+
+/* FIX: align logo + title side-by-side */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-logo {
+  height: 28px;
+  width: auto;
 }
 
 .topbar strong {
@@ -116,7 +210,7 @@ body {
   height: calc(100vh - 50px);
 }
 
-/* Sidebar */
+/* ── Sidebar ────────────────────────────────────────────────── */
 
 .sidebar {
   width: 320px;
@@ -224,7 +318,7 @@ body {
   color: var(--gold);
 }
 
-/* Map area */
+/* ── Map area ───────────────────────────────────────────────── */
 
 .map-area {
   flex: 1;
