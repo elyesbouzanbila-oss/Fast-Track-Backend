@@ -1,6 +1,6 @@
 // frontend/app.js
 
-const API_BASE_URL = 'http://localhost:3001'; // adjust for production
+const API_BASE_URL = 'http://localhost:3000'; // adjust for production
 
 // ====== Token helpers ======
 function getToken() {
