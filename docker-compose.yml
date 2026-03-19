@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  # PostgreSQL with PostGIS extension
+  postgres:
+    image: postgis/postgis:15-3.4
+    container_name: nav_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-navdb}
+      POSTGRES_USER: ${DB_USER:-navuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-navpassword}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-navuser} -d ${DB_NAME:-navdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OSRM for car routing
+  osrm-car:
+    image: osrm/osrm-backend:latest
+    container_name: nav_osrm_car
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: >
+      osrm-routed
+      --algorithm mld
+      /data/map-car.osrm
+      --max-table-size 10000
+    profiles:
+      - routing
+
+  # OSRM for foot routing
+  osrm-foot:
+    image: osrm/osrm-backend:latest
+    container_name: nav_osrm_foot
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./osrm-data:/data
+    command: >
+      osrm-routed
+      --algorithm mld
+      /data/map-foot.osrm
+    profiles:
+      - routing
+
+  # The Node.js API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nav_api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-navdb}
+      DB_USER: ${DB_USER:-navuser}
+      DB_PASSWORD: ${DB_PASSWORD:-navpassword}
+      OSRM_CAR_URL: http://osrm-car:5000
+      OSRM_FOOT_URL: http://osrm-foot:5000
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
