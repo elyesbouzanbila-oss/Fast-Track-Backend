@@ -1,0 +1,95 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fast-Track Navigation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Auth section -->
+    <div id="auth-section">
+        <h1>
+            <img src="Assets/logo.png" alt="Fast-Track Navigation" class="logo" />
+            Fast-Track Navigation
+        </h1>
+      <div id="login-form">
+        <h2>Login</h2>
+        <label>Email</label>
+        <input type="email" id="login-email" />
+        <label>Password</label>
+        <input type="password" id="login-password" />
+        <button id="login-btn">Login</button>
+        <p id="login-error" class="error"></p>
+      </div>
+
+      <hr />
+
+      <div id="signup-form">
+        <h2>Sign up</h2>
+        <label>Name</label>
+        <input type="text" id="signup-name" />
+        <label>Email</label>
+        <input type="email" id="signup-email" />
+        <label>Password</label>
+        <input type="password" id="signup-password" />
+        <button id="signup-btn">Sign up</button>
+        <p id="signup-error" class="error"></p>
+      </div>
+    </div>
+
+    <!-- Main app section -->
+    <div id="app-section" class="hidden">
+        <header class="topbar">
+        <div class="topbar-left">
+          <img src="Assets/logo.png" alt="Logo" class="topbar-logo" />
+          <strong>Fast-Track Navigation</strong>
+        </div>
+        <div>
+          <span id="user-name"></span>
+          <button id="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <h3>Route planner</h3>
+
+          <label>Mode</label>
+          <select id="mode-select">
+            <option value="car">Car</option>
+            <option value="foot">Walking</option>
+            <option value="bike">Bike</option>
+            <option value="transit">Transit</option>
+            <option value="multimodal">Multimodal</option>
+          </select>
+
+          <label>Origin lat</label>
+          <input type="number" id="origin-lat" />
+          <label>Origin lng</label>
+          <input type="number" id="origin-lng" />
+
+          <label>Destination lat</label>
+          <input type="number" id="dest-lat" />
+          <label>Destination lng</label>
+          <input type="number" id="dest-lng" />
+
+          <button id="route-btn">Calculate route</button>
+          <p id="route-error" class="error"></p>
+
+          <div id="route-summary" class="box hidden"></div>
+
+          <h4>Hazards along route</h4>
+          <div id="hazards-list" class="hazards"></div>
+        </aside>
+
+        <main class="map-area">
+          <!-- You can later embed a real map (Leaflet) -->
+          <div class="map-placeholder">Map goes here</div>
+        </main>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
