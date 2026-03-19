@@ -33,12 +33,12 @@ services:
     command: >
       osrm-routed
       --algorithm mld
-      /data/map-car.osrm
+      /data/map.osrm
       --max-table-size 10000
     profiles:
       - routing
 
-  # OSRM for foot routing
+  # OSRM for foot routing (optional separate instance; for now we reuse map.osrm)
   osrm-foot:
     image: osrm/osrm-backend:latest
     container_name: nav_osrm_foot
@@ -50,7 +50,7 @@ services:
     command: >
       osrm-routed
       --algorithm mld
-      /data/map-foot.osrm
+      /data/map.osrm
     profiles:
       - routing
 

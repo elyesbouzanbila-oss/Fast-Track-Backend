@@ -1,11 +1,4 @@
 #!/bin/bash
-# setup-osrm.sh
-# Pre-processes OSM data for OSRM routing (car + foot profiles).
-# Uses the MLD (Multi-Level Dijkstra) algorithm for fast, memory-efficient routing.
-#
-# Prerequisites: Docker must be running.
-# Run AFTER download-osm.sh.
-
 set -e
 
 DATA_DIR="$(pwd)/osrm-data"
@@ -14,30 +7,28 @@ OSRM_IMAGE="osrm/osrm-backend:latest"
 
 if [ ! -f "$PBF_FILE" ]; then
   echo "❌ OSM file not found: $PBF_FILE"
-  echo "   Run scripts/download-osm.sh first."
+  echo "   Put your .osm.pbf at that path or run scripts/download-osm.sh first."
   exit 1
 fi
 
-echo "🚗 Processing car profile..."
+echo "🚗 Processing car profile (MLD)..."
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
   osrm-extract -p /opt/car.lua /data/map.osm.pbf
-cp "$DATA_DIR/map.osrm" "$DATA_DIR/map-car.osrm" 2>/dev/null || true
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
-  osrm-partition /data/map-car.osrm
+  osrm-partition /data/map.osrm
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
-  osrm-customize /data/map-car.osrm
-echo "   ✅ Car profile ready"
+  osrm-customize /data/map.osrm
+echo "   ✅ Car profile ready (map.osrm)"
 
 echo ""
-echo "🚶 Processing foot (walking) profile..."
+echo "🚶 Processing foot (walking) profile (MLD)..."
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
   osrm-extract -p /opt/foot.lua /data/map.osm.pbf
-cp "$DATA_DIR/map.osrm" "$DATA_DIR/map-foot.osrm" 2>/dev/null || true
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
-  osrm-partition /data/map-foot.osrm
+  osrm-partition /data/map.osrm
 docker run --rm -v "$DATA_DIR:/data" $OSRM_IMAGE \
-  osrm-customize /data/map-foot.osrm
-echo "   ✅ Foot profile ready"
+  osrm-customize /data/map.osrm
+echo "   ✅ Foot profile ready (same map.osrm)"
 
 echo ""
 echo "✅ OSRM setup complete."
