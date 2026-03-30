@@ -319,22 +319,16 @@ body {
 }
 
 /* ── Map area ───────────────────────────────────────────────── */
-
 .map-area {
   flex: 1;
   position: relative;
   background: radial-gradient(circle at center, #111a30 0, #050912 60%);
 }
 
-.map-placeholder {
+/* Leaflet map container */
+#map {
   position: absolute;
   inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
   border-left: 1px solid rgba(201, 154, 59, 0.18);
+  background: #222; /* temporary debug background */
 }

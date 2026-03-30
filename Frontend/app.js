@@ -1,6 +1,6 @@
 // frontend/app.js
 
-const API_BASE_URL = 'http://localhost:3001'; // adjust for production
+const API_BASE_URL = 'http://localhost:3000'; 
 
 // ====== Token helpers ======
 function getToken() {
@@ -40,9 +40,42 @@ async function apiRequest(endpoint, options = {}) {
   return response.json();
 }
 
+let map; // Leaflet map instance
+
 // ====== DOM refs ======
 const authSection = document.getElementById('auth-section');
 const appSection = document.getElementById('app-section');
+
+// Initialize Leaflet map once the DOM is ready
+function initMap() {
+  console.log('initMap() called, L =', typeof L);
+
+  if (map) {
+    console.log('Map already initialized, skipping.');
+    return; // already initialized
+  }
+
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet (L) is not defined yet.');
+    return;
+  }
+
+  const mapEl = document.getElementById('map');
+  if (!mapEl) {
+    console.warn('Map element #map not found.');
+    return;
+  }
+
+  console.log('Initializing Leaflet map (initMap)...');
+  map = L.map('map').setView([36.8065, 10.1815], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors',
+  }).addTo(map);
+
+  L.marker([36.8065, 10.1815]).addTo(map).bindPopup('Default origin');
+}
 
 const loginEmailInput = document.getElementById('login-email');
 const loginPasswordInput = document.getElementById('login-password');
@@ -90,22 +123,35 @@ function showApp(user) {
   authSection.classList.add('hidden');
   appSection.classList.remove('hidden');
   userNameSpan.textContent = user.name || user.email || 'User';
+
+  console.log('showApp called, user =', user);
 }
+
+
+console.log('app.js loaded, registering DOMContentLoaded');
 
 // On page load: if token exists, try to get user
 window.addEventListener('DOMContentLoaded', async () => {
+  console.log('DOMContentLoaded fired');
+
+  // Initialize Leaflet map once DOM is ready (slight delay to be safe)
+  setTimeout(() => {
+    console.log('Calling initMap() from DOMContentLoaded');
+    initMap();
+  }, 0);
+
   const token = getToken();
+
   if (!token) {
     showAuth();
-    return;
-  }
-
-  const user = await fetchCurrentUser();
-  if (user) {
-    showApp(user);
   } else {
-    clearToken();
-    showAuth();
+    const user = await fetchCurrentUser();
+    if (user) {
+      showApp(user);
+    } else {
+      clearToken();
+      showAuth();
+    }
   }
 
   // optional: set some default coords
@@ -114,6 +160,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   destLatInput.value = 36.819;
   destLngInput.value = 10.1658;
 });
+
 
 // Login
 loginBtn.addEventListener('click', async () => {

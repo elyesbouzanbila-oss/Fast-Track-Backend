@@ -4,8 +4,18 @@
   <head>
     <meta charset="UTF-8" />
     <title>Fast-Track Navigation</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""
+    />
+
+    <!-- App CSS -->
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <!-- Auth section -->
     <div class="auth-wrapper">
@@ -23,7 +33,6 @@
         <button id="login-btn">Login</button>
         <p id="login-error" class="error"></p>
       </div>
-
       <hr />
 
       <div id="signup-form">
@@ -86,12 +95,17 @@
         </aside>
 
         <main class="map-area">
-          <!-- You can later embed a real map (Leaflet) -->
-          <div class="map-placeholder">Map goes here</div>
+          <div id="map"></div>
         </main>
       </div>
     </div>
-
+    <!-- Leaflet map JS -->
+    <!-- Leaflet map JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      crossorigin=""
+    ></script>
     <script src="app.js"></script>
+
   </body>
 </html>
